@@ -19,7 +19,8 @@ from django.conf import settings
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^api/', include('users.urls', namespace='users'))
+    url(r'^api/', include('users.urls', namespace='users')),
+    url(r'^api/', include('posts.urls', namespace='posts'))
 ]
 
 if settings.DEBUG:
