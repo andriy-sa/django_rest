@@ -1,14 +1,15 @@
-from rest_framework.generics import ListAPIView, RetrieveAPIView
+from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView, ListCreateAPIView
 from .models import User
 from .serializers import UserSerializer
 from django.db.models import Q, Prefetch
-from django_rest.helpers import prepare_order
+from django_rest.helpers import prepare_order, CustomPagination
 from posts.models import Post
+from rest_framework.response import Response
 
 
 class UsersListAPIView(ListAPIView):
     serializer_class = UserSerializer
-    pagination_class = None
+    pagination_class = CustomPagination
 
     def get_queryset(self):
         q = self.request.GET.get('q', '')
@@ -27,3 +28,8 @@ class UsersListAPIView(ListAPIView):
 class UserDetailAPIView(RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+
+class CustomRetrive(RetrieveAPIView):
+    def retrieve(self, request, *args, **kwargs):
+        return Response({'test_data': 'test....'})
