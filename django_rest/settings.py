@@ -25,7 +25,9 @@ SECRET_KEY = '7g-+6-y-+%@g93flhg8dc9pmxkene8$mr7p*b_^2-xke=q)+92'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '127.0.0.1'
+]
 
 
 # Application definition
@@ -144,12 +146,12 @@ CORS_ORIGIN_WHITELIST = (
 AUTH_USER_MODEL = 'users.User'
 
 REST_FRAMEWORK = {
-   # 'EXCEPTION_HANDLER': 'conduit.apps.core.exceptions.core_exception_handler',
+    #'EXCEPTION_HANDLER': 'django_rest.exceptions.core_exception_handler',
     'NON_FIELD_ERRORS_KEY': 'error',
 
-    # 'DEFAULT_AUTHENTICATION_CLASSES': (
-    #     'conduit.apps.authentication.backends.JWTAuthentication',
-    # ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'users.backends.JWTAuthentication',
+    ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 20,
 }

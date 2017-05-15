@@ -1,6 +1,7 @@
-from rest_framework.serializers import ModelSerializer, IntegerField, CharField, ValidationError
+from rest_framework.serializers import ModelSerializer, Serializer, IntegerField, CharField, ValidationError
 from .models import User
 from posts.models import Post
+from django.contrib.auth import authenticate
 
 
 class PostRelationSerializer(ModelSerializer):
@@ -40,3 +41,48 @@ class CreateUserSerializer(ModelSerializer):
                   'email',
                   'password',
                   'password_confirm']
+
+
+class UpdateUserSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username',
+                  'email']
+
+
+class LoginSerializer(Serializer):
+    email = CharField(max_length=255, required=False)
+    username = CharField(max_length=255, read_only=True)
+    password = CharField(max_length=128, write_only=True, required=False)
+    token = CharField(max_length=255, read_only=True)
+
+    def validate(self, data):
+
+        email = data.get('email', None)
+        password = data.get('password', None)
+
+        if email is None:
+            raise ValidationError(
+                'An email address is required to log in.'
+            )
+
+        if password is None:
+            raise ValidationError(
+                'A password is required to log in.'
+            )
+
+        user = authenticate(username=email, password=password)
+
+        if user is None:
+            raise ValidationError(
+                'A user with this email and password was not found.'
+            )
+
+        if not user.is_active:
+            raise ValidationError(
+                'This user has been deactivated.'
+            )
+
+        return {
+            'token': user.token
+        }

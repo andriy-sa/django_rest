@@ -1,16 +1,27 @@
 from rest_framework.generics import (
     ListAPIView,
     RetrieveAPIView,
+    UpdateAPIView
+)
+from rest_framework.permissions import (
+    AllowAny,
+    IsAuthenticated
+)
+from .serializers import (
+    UserSerializer,
+    CreateUserSerializer,
+    UpdateUserSerializer,
+    LoginSerializer,
 )
 from rest_framework.views import APIView
 from .models import User
-from .serializers import UserSerializer, CreateUserSerializer
 from django.db.models import Q, Count
 from django_rest.helpers import prepare_order, CustomPagination
 from rest_framework.response import Response
 
 
 class UsersListAPIView(ListAPIView):
+    permission_classes = (IsAuthenticated,)
     serializer_class = UserSerializer
     pagination_class = CustomPagination
 
@@ -51,6 +62,46 @@ class UserCreateAPIView(APIView):
         response['token'] = user.token
 
         return Response(response, status=200)
+
+
+class UserUpdateAPIView(APIView):
+    serializer_class = UpdateUserSerializer
+
+    def put(self, request, id):
+        user = User.objects.filter(id=id).first()
+        if not user:
+            return Response({}, status=404)
+
+        data = request.data
+
+        serializer = self.serializer_class(user, data=data)
+        serializer.is_valid(raise_exception=True)
+
+        user.username = serializer.initial_data.get('username')
+        user.email = serializer.initial_data.get('email')
+        user.save()
+
+        return Response(UserSerializer(instance=user).data, status=200)
+
+
+class LoginAPIView(APIView):
+    permission_classes = (AllowAny,)
+    serializer_class = LoginSerializer
+
+    def post(self, request):
+        data = request.data
+
+        serializer = self.serializer_class(data=data)
+        serializer.is_valid(raise_exception=True)
+
+        return Response(serializer.data, status=200)
+
+
+class MeAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        return Response(UserSerializer(instance=request.user).data, status=200)
 
 
 class CustomRetrive(RetrieveAPIView):
