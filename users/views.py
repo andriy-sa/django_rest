@@ -18,12 +18,29 @@ from .models import User
 from django.db.models import Q, Count
 from django_rest.helpers import prepare_order, CustomPagination
 from rest_framework.response import Response
-
+import coreapi
 
 class UsersListAPIView(ListAPIView):
-    permission_classes = (IsAuthenticated,)
+    #permission_classes = (IsAuthenticated,)
     serializer_class = UserSerializer
     pagination_class = CustomPagination
+    model = User
+    coreapi_fields = (
+        coreapi.Field(
+            name='q',
+            location='query',
+            required=False,
+            description='Search field',
+            type='string'
+        ),
+        coreapi.Field(
+            name='sort',
+            location='query',
+            required=False,
+            description='Sort field',
+            type='string'
+        ),
+    )
 
     def get_queryset(self):
         q = self.request.GET.get('q', '')
@@ -87,8 +104,33 @@ class UserUpdateAPIView(APIView):
 class LoginAPIView(APIView):
     permission_classes = (AllowAny,)
     serializer_class = LoginSerializer
+    coreapi_fields = (
+        coreapi.Field(
+            name='data',
+            location='body',
+            required=True,
+            type='array'
+        ),
+    )
+
+    def get_serializer_class(self):
+        return self.serializer_class
 
     def post(self, request):
+        """
+            Example Request:
+                - body:{
+                    'email': string (required),
+                    'password': string (required)
+                }
+
+            responseMessages:
+                - code: 200
+                   token: (string) 
+                - code: 401
+                    message: (string)
+            """
+
         data = request.data
 
         serializer = self.serializer_class(data=data)

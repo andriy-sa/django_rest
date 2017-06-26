@@ -16,11 +16,16 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.conf import settings
-
+#from rest_framework_swagger.views import get_swagger_view
+from .swagger import SwaggerSchemaView
+from rest_framework.documentation import include_docs_urls
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api/', include('users.urls', namespace='users')),
-    url(r'^api/', include('posts.urls', namespace='posts'))
+    url(r'^api/', include('posts.urls', namespace='posts')),
+    url(r'^docs/$', SwaggerSchemaView.as_view()),
+    url(r'^docs2/', include('rest_framework_docs.urls')),
+    url(r'^docs3/', include_docs_urls(title='My API title'))
 ]
 
 if settings.DEBUG:

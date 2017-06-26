@@ -15,7 +15,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
@@ -29,7 +28,6 @@ ALLOWED_HOSTS = [
     '127.0.0.1'
 ]
 
-
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -42,11 +40,12 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'debug_toolbar',
-
+    'treebeard',
     'users',
     'posts',
+    'rest_framework_swagger',
+    'rest_framework_docs',
 ]
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -80,21 +79,19 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'django_rest.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
 DATABASES = {
     'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'django_rest',
-            'USER': 'root',
-            'PASSWORD': '1',
-            'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
-            'PORT': '3306',
-        }
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'django_rest',
+        'USER': 'root',
+        'PASSWORD': '1',
+        'HOST': 'localhost',  # Or an IP Address that your DB is hosted on
+        'PORT': '3306',
+    }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -114,7 +111,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
@@ -127,7 +123,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
@@ -146,13 +141,36 @@ CORS_ORIGIN_WHITELIST = (
 AUTH_USER_MODEL = 'users.User'
 
 REST_FRAMEWORK = {
-    #'EXCEPTION_HANDLER': 'django_rest.exceptions.core_exception_handler',
+    # 'EXCEPTION_HANDLER': 'django_rest.exceptions.core_exception_handler',
     'NON_FIELD_ERRORS_KEY': 'error',
 
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'users.backends.JWTAuthentication',
     ),
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.MultiPartParser',
+        'rest_framework.parsers.JSONParser',
+    ),
+    # 'DEFAULT_RENDERER_CLASSES': (
+    #     'rest_framework.renderers.JSONRenderer',
+    # ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 20,
 }
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'api_key': {
+            'type': 'apiKey',
+            'in': 'header',
+            'name': 'Authorization'
+        }
+    },
+    'USE_SESSION_AUTH': False,
+    'JSON_EDITOR': False,
+    "is_authenticated": False,  # Set to True to enforce user authentication,
+    "is_superuser": False,  # Set to True to enforce admin only access
+}
+
 INTERNAL_IPS = ('127.0.0.1',)
