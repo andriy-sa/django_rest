@@ -10,7 +10,12 @@ https://docs.djangoproject.com/en/1.11/howto/deployment/wsgi/
 import os
 
 from django.core.wsgi import get_wsgi_application
+from socketio import Middleware
+from socket_io.views import sio
+from whitenoise.django import DjangoWhiteNoise
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "django_rest.settings")
 
-application = get_wsgi_application()
+django_app = get_wsgi_application()
+django_app = DjangoWhiteNoise(django_app)
+application = Middleware(sio, django_app)

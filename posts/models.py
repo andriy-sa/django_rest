@@ -58,6 +58,7 @@ class Comment(MP_Node):
         if post_id:
             qset = qset.filter(post_id=post_id)
         ret, lnk = [], {}
+
         for pyobj in serializers.serialize('python', qset):
             # django's serializer stores the attributes in 'fields'
             fields = pyobj['fields']

@@ -25,24 +25,26 @@ SECRET_KEY = '7g-+6-y-+%@g93flhg8dc9pmxkene8$mr7p*b_^2-xke=q)+92'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '127.0.0.1'
+    '127.0.0.1',
+    'django-rest.dev'
 ]
 
 # Application definition
 INSTALLED_APPS = [
+    'socket_io',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     'corsheaders',
     'rest_framework',
     'debug_toolbar',
     'treebeard',
     'users',
     'posts',
+    'statistic',
     'rest_framework_swagger',
     'rest_framework_docs',
 ]
@@ -128,6 +130,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 
 CORS_ORIGIN_WHITELIST = (
     '0.0.0.0:4000',

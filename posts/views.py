@@ -57,5 +57,4 @@ class CommentsListAPIView(APIView):
             return Response({}, status=404)
 
         comments = Comment.dump_bulk(post_id=pk)
-        print(comments)
         return Response(comments, status=200)
