@@ -20,7 +20,8 @@
             });
             console.log(socket);
             socket.on('connect', function() {
-                socket.emit('my event', {data: 'I\'m connected!'});
+                console.log('connected');
+                socket.emit('test_event', {data: 'I\'m connected!'});
             });
 
             socket.on('django', function(msg) {

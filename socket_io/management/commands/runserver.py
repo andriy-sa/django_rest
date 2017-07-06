@@ -1,6 +1,6 @@
 from django.core.management.commands.runserver import Command as RunCommand
 
-from socket_io.views import sio
+from django_rest.wsgi import sio
 
 
 class Command(RunCommand):

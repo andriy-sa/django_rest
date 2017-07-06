@@ -1,9 +1,8 @@
 from django.shortcuts import render
 import socketio
 from users.backends import JWTAuthentication
-
-sio = socketio.Server(async_mode='gevent')
-
+from django_rest.wsgi import sio
+from statistic.models import Statistic
 
 @sio.on('connect')
 def test_connect(sid, environ):
@@ -25,13 +24,9 @@ def test_connect(sid, environ):
 @sio.on('test_event')
 def test_event(sid, message):
     print('message from socket:')
-   # print(sio.environ[sid]['HTTP_AUTHORIZATION'])
-    print(sio.environ[sid]['user'])
-    print(sio.environ[sid]['user'].id)
-    print(sid)
 
     # to all
-    #sio.emit('django',{'kkk':'sss'})
+    sio.emit('django',{'kkk':'sss'})
 
     #to one
     #sio.emit('django',{'kkk':'sss1'}, room=sid)
@@ -41,6 +36,7 @@ def test_event(sid, message):
 
 
 def index(request):
+    print('reload index')
     return render(request, 'index.html', {})
 
 # Create your views here.
