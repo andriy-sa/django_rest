@@ -26,7 +26,7 @@ packaging==16.8
 pendulum==1.2.4
 pyasn1==0.2.3
 pycparser==2.17
-Pygments==2.2.0
+Pygments==2.7.4
 PyJWT==1.5.0
 pyparsing==2.2.0
 python-dateutil==2.6.0
